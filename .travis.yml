@@ -1,0 +1,18 @@
+language:
+    - cpp
+
+before_install:
+    - sudo apt-get update -qq
+    - git clone https://github.com/IntelligentHome/External.git ../External
+    - cd ../External
+    - git submodule update --init --remore --recursive
+    - cd ../Nrf24l01_driver
+
+install:
+    - sudo apt-get install -qq gcc-avr binutils-avr avr-libc
+
+script:
+    - ./build.sh -bt
+
+notifications:
+    email: false
