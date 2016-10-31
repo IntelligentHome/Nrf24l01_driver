@@ -31,14 +31,20 @@ function run_tests {
     make
     ./Nrf24l01_driver_unit_tests
     retval=$?
+    rm Nrf24l01_driver_unit_tests
     cd ..
 
     return $retval
 }
 
 function clean {
-    rm -r $BUILD_DIR
-    rm -r $TEST_DIR
+    if [ -e $BUILD_DIR ]; then
+        rm -r $BUILD_DIR
+    fi
+
+    if [ -e $TEST_DIR ]; then
+        rm -r $TEST_DIR
+    fi
 }
 
 while getopts ":btc" opt; do
