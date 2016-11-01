@@ -13,16 +13,38 @@ Nrf24l01::Nrf24l01(
     // by default nrf24l01 will be disabled.
     // setting logic '1'.
     chip_enable_->Set();
+    this->SetDefaults();
 }
 
 Status Nrf24l01::SetDefaults(void) {
 
+    this->SetRfChannel(0x60);
     return STATUS_FAILURE;
 }
 
 Status Nrf24l01::SetRfChannel(uint8_t channel) {
 
-    return STATUS_FAILURE;
+    union RfSendData {
+        struct Frame{
+            uint8_t command;
+
+            uint8_t channel		: 7, // Sets the frequency channel nRF24l01 operates on
+                    Reserved	: 1;
+        } frame;
+        uint8_t raw_data[sizeof(Frame)];
+    };
+
+    const uint8_t write_address = 0x25;
+    const uint8_t channel_max = 127;
+
+    if(channel_max < channel)
+        return STATUS_FAILURE;
+
+    RfSendData data = { .frame = { .command = write_address, .channel = channel } };
+
+    this->transport_->Send(data.raw_data, sizeof(RfSendData));
+
+    return STATUS_OK ;
 }
 
 Status Nrf24l01::SetPayloadSize(uint8_t payload_size) {

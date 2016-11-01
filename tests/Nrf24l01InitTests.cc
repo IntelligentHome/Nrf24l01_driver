@@ -2,24 +2,8 @@
 #include "Nrf24l01.h"
 #include "Nrf24l01Common.h"
 
-uint8_t g_set_counter = 0;
-uint8_t g_clear_counter = 0;
-uint8_t g_toggle_counter = 0;
 
-class GpioMockInit : public test_nrf24l01::GpioMock {
-
-public:
-
-    GpioMockInit() {
-        g_set_counter = 0;
-        g_clear_counter = 0;
-        g_toggle_counter = 0;
-    }
-
-    virtual void Set(void) { g_set_counter++; }
-    virtual void Clear(void) { g_clear_counter++; }
-    virtual void Toggle(void) { g_toggle_counter++; }
-};
+namespace test_nrf24l01 {
 
 /*
  On init nrf24l01 driver should:
@@ -27,14 +11,29 @@ public:
  */
 TEST(Nrf24l01, Init) {
 
-    GpioMockInit gpio;
-    test_nrf24l01::TransportMock transport;
+    uint16_t set_cnt = 0;
+    uint16_t clear_cnt = 0;
+    uint16_t toggle_cnt = 0;
+    uint8_t state = 0;
+
+    uint8_t sent_data[200];
+
+    GpioMock gpio(&set_cnt, &clear_cnt, &toggle_cnt, &state);
+    TransportMock transport(sent_data, sizeof(sent_data));
+
+    const uint8_t expected_transport[] = { 0x25, 0x60 };
 
     nrf24l01_driver::Nrf24l01 nrf(
             &transport,
             &gpio);
 
-    EXPECT_TRUE(1 == g_set_counter);
-    EXPECT_TRUE(0 == g_clear_counter);
-    EXPECT_TRUE(0 == g_toggle_counter);
+    EXPECT_TRUE(1 == set_cnt);
+    EXPECT_TRUE(0 == clear_cnt);
+    EXPECT_TRUE(0 == toggle_cnt);
+
+    for(int i = 0; i < sizeof(expected_transport); i++)
+        EXPECT_TRUE(expected_transport[i] == sent_data[i]) << \
+                "Got " << (int)sent_data[i] << " Expected " << (int)expected_transport[i] << std::endl;
 }
+
+} /*namespace test_nrf24l01*/
