@@ -28,6 +28,7 @@ add_executable(
     Nrf24l01_driver_unit_tests
     main.cc
     Nrf24l01InitTests.cc
+    Nrf24l01SetRfChannelTests.cc
     ../Nrf24l01.cpp
     )
 

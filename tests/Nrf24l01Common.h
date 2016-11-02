@@ -21,6 +21,13 @@ public:
             state_(state)
     {}
 
+    GpioMock() {
+        set_cnt_    = &mock_set_cnt_;
+        clear_cnt_  = &mock_clear_cnt_;
+        toggle_cnt_ = &mock_toggle_cnt_;
+        state_      = &mock_state_;
+    }
+
     virtual void Set(void) { (*set_cnt_)++; }
     virtual void Clear(void) { (*clear_cnt_)++; }
     virtual void Toggle(void) { (*toggle_cnt_)++; }
@@ -31,6 +38,11 @@ private:
     uint16_t    *clear_cnt_;
     uint16_t    *toggle_cnt_;
     uint8_t     *state_;
+
+    uint16_t    mock_set_cnt_;
+    uint16_t    mock_clear_cnt_;
+    uint16_t    mock_toggle_cnt_;
+    uint8_t     mock_state_;
 };
 
 class TransportMock : public transport::ITransport {
@@ -62,10 +74,9 @@ public:
     virtual void Get(uint8_t recv_buff[], uint16_t size) { }
     virtual void SendAndGet(uint8_t send_buff[], uint8_t recv_buff[], uint16_t size) {}
 
-private:
-    uint8_t	    	*sent_data_;
-    const uint16_t	sent_data_size_;
-    uint16_t	    sent_data_idx_;
+    uint8_t         *sent_data_;
+    const uint16_t  sent_data_size_;
+    uint16_t        sent_data_idx_;
 };
 
 
