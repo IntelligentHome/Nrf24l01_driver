@@ -38,7 +38,7 @@ Status Nrf24l01::SetRfChannel(uint8_t channel) {
     const uint8_t channel_max = 127;
 
     if(channel_max < channel)
-        return STATUS_FAILURE;
+        return STATUS_OUT_OF_RANGE;
 
     RfSendData data = { .frame = { .command = write_address, .channel = channel } };
 
