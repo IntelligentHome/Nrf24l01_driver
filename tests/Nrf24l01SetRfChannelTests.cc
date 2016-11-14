@@ -24,7 +24,7 @@ TEST(Nrf24l01SetRfChannelTests, SetRfChannelTo0x60) {
 
     for(int i = 0; i < sizeof(expected_transport); i++)
         EXPECT_TRUE(expected_transport[i] == sent_data[i]) << "Got " \
-                << (int)sent_data[i] << "Expected " << (int)expected_transport[i] << std::endl;
+                << (int)sent_data[i] << " Expected " << (int)expected_transport[i] << " at position: " << i << std::endl;
 }
 
 TEST(Nrf24l01SetRfChannelTests, SetRfChannelCoupleTimes) {
@@ -48,7 +48,7 @@ TEST(Nrf24l01SetRfChannelTests, SetRfChannelCoupleTimes) {
 
     for(int i = 0; i < sizeof(expected_transport); i++)
         EXPECT_TRUE(expected_transport[i] == sent_data[i]) << "Got " \
-                << (int)sent_data[i] << "Expected " << (int)expected_transport[i] << std::endl;
+                << (int)sent_data[i] << " Expected " << (int)expected_transport[i] << " at position: " << i << std::endl;
 }
 
 TEST(Nrf24l01SetRfChannelTests, NegativeTryToSetMoreThanMax) {
@@ -72,7 +72,7 @@ TEST(Nrf24l01SetRfChannelTests, NegativeTryToSetMoreThanMax) {
 
     for(int i = 0; i < sizeof(expected_transport); i++)
         EXPECT_TRUE(expected_transport[i] == sent_data[i]) << "Got " \
-                << (int)sent_data[i] << "Expected " << (int)expected_transport[i] << std::endl;
+                << (int)sent_data[i] << " Expected " << (int)expected_transport[i] << " at position: " << i << std::endl;
 }
 
 

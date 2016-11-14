@@ -29,6 +29,7 @@ add_executable(
     main.cc
     Nrf24l01InitTests.cc
     Nrf24l01SetRfChannelTests.cc
+    Nrf24l01SetPayloadSizeTests.cc
     ../Nrf24l01.cpp
     )
 

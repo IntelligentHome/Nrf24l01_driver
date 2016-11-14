@@ -25,7 +25,7 @@ Status Nrf24l01::SetDefaults(void) {
 Status Nrf24l01::SetRfChannel(uint8_t channel) {
 
     union RfSendData {
-        struct Frame{
+        struct Frame {
             uint8_t command;
 
             uint8_t channel		: 7, // Sets the frequency channel nRF24l01 operates on
@@ -34,13 +34,17 @@ Status Nrf24l01::SetRfChannel(uint8_t channel) {
         uint8_t raw_data[sizeof(Frame)];
     };
 
-    const uint8_t write_address = 0x25;
     const uint8_t channel_max = 127;
 
     if(channel_max < channel)
         return STATUS_OUT_OF_RANGE;
 
-    RfSendData data = { .frame = { .command = write_address, .channel = channel } };
+    RfSendData data = {
+        .frame = {
+            .command = this->GetWriteAddress(REGISTER_RF_CH),
+            .channel = channel
+        }
+    };
 
     this->transport_->Send(data.raw_data, sizeof(RfSendData));
 
@@ -49,7 +53,48 @@ Status Nrf24l01::SetRfChannel(uint8_t channel) {
 
 Status Nrf24l01::SetPayloadSize(uint8_t payload_size) {
 
-    return STATUS_FAILURE;
+    //TODO: Create define for this magic 0x20
+    if (payload_size > 0x20)
+        return STATUS_OUT_OF_RANGE;
+
+    this->SetPayloadSize(nrf24_driver::R0, payload_size);
+    this->SetPayloadSize(nrf24_driver::R1, payload_size);
+    this->SetPayloadSize(nrf24_driver::R2, payload_size);
+    this->SetPayloadSize(nrf24_driver::R3, payload_size);
+    this->SetPayloadSize(nrf24_driver::R4, payload_size);
+    this->SetPayloadSize(nrf24_driver::R5, payload_size);
+
+    return STATUS_OK;
+}
+
+Status Nrf24l01::SetPayloadSize(nrf24_driver::Rx rx, uint8_t payload_size) {
+
+    union PayloadSendData {
+        struct Frame {
+            uint8_t command;
+
+            uint8_t rx_pw;
+        } frame;
+        uint8_t raw_data[sizeof(Frame)];
+    };
+
+    if (rx >= nrf24_driver::RxMax)
+        return STATUS_OUT_OF_RANGE;
+
+    //TODO: Create define for this magic 0x20
+    if (payload_size > 0x20)
+        return STATUS_OUT_OF_RANGE;
+
+    PayloadSendData data = {
+        .frame = {
+            .command = this->GetWriteAddress(REGISTER_RX_PW_P0) + this->GetPipeNumber(rx),
+            .rx_pw = payload_size
+        }
+    };
+
+    this->transport_->Send(data.raw_data, sizeof(PayloadSendData));
+
+    return STATUS_OK;
 }
 
 Status Nrf24l01::SetRetries(uint8_t delay, uint8_t retries) {
@@ -65,6 +110,31 @@ Status Nrf24l01::SetRxAddress(nrf24_driver::Rx rx, uint8_t address[], uint8_t si
 Status Nrf24l01::SetTxAddress(nrf24_driver::Tx tx, uint8_t address[], uint8_t size) {
 
     return STATUS_FAILURE;
+}
+
+uint8_t Nrf24l01::GetWriteAddress(RegisterMap rm) {
+    return static_cast<uint8_t>(rm) + REGISTER_WRITE_BASE_ADDRESS;
+}
+
+uint8_t Nrf24l01::GetReadAddress(RegisterMap rm) {
+    return static_cast<uint8_t>(rm) + REGISTER_READ_BASE_ADDRESS;
+}
+
+uint8_t Nrf24l01::GetPipeNumber(nrf24_driver::Rx rx) {
+    if (nrf24_driver::R0 == rx)
+        return 0;
+    else if (nrf24_driver::R1 == rx)
+        return 1;
+    else if (nrf24_driver::R2 == rx)
+        return 2;
+    else if (nrf24_driver::R3 == rx)
+        return 3;
+    else if (nrf24_driver::R4 == rx)
+        return 4;
+    else if (nrf24_driver::R5 == rx)
+        return 5;
+    else
+        return 0xFF;
 }
 
 } /*namespace nrf24l01_driver*/
