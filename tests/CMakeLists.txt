@@ -6,6 +6,8 @@ enable_language(C CXX)
 
 set(GOOGLETEST_ROOT ../../External/googletest/googletest CACHE STRING "Google Test source root")
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+
 include_directories(
     ${PROJECT_SOURCE_DIR}/${GOOGLETEST_ROOT}
     ${PROJECT_SOURCE_DIR}/${GOOGLETEST_ROOT}/include
