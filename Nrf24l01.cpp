@@ -87,7 +87,7 @@ Status Nrf24l01::SetPayloadSize(nrf24_driver::Rx rx, uint8_t payload_size) {
 
     PayloadSendData data = {
         .frame = {
-            .command = this->GetWriteAddress(REGISTER_RX_PW_P0) + this->GetPipeNumber(rx),
+            .command = static_cast<uint8_t>(this->GetWriteAddress(REGISTER_RX_PW_P0) + this->GetPipeNumber(rx)),
             .rx_pw = payload_size
         }
     };
