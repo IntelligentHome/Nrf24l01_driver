@@ -39,12 +39,9 @@ Status Nrf24l01::SetRfChannel(uint8_t channel) {
     if(channel_max < channel)
         return STATUS_OUT_OF_RANGE;
 
-    RfSendData data = {
-        .frame = {
-            .command = this->GetWriteAddress(REGISTER_RF_CH),
-            .channel = channel
-        }
-    };
+    RfSendData data = { 0 };
+    data.frame.command = this->GetWriteAddress(REGISTER_RF_CH);
+    data.frame.channel = channel;
 
     this->transport_->Send(data.raw_data, sizeof(RfSendData));
 
@@ -85,12 +82,9 @@ Status Nrf24l01::SetPayloadSize(nrf24_driver::Rx rx, uint8_t payload_size) {
     if (payload_size > 0x20)
         return STATUS_OUT_OF_RANGE;
 
-    PayloadSendData data = {
-        .frame = {
-            .command = static_cast<uint8_t>(this->GetWriteAddress(REGISTER_RX_PW_P0) + this->GetPipeNumber(rx)),
-            .rx_pw = payload_size
-        }
-    };
+    PayloadSendData data = { 0 };
+    data.frame.command = static_cast<uint8_t>(this->GetWriteAddress(REGISTER_RX_PW_P0) + this->GetPipeNumber(rx));
+    data.frame.rx_pw = payload_size;
 
     this->transport_->Send(data.raw_data, sizeof(PayloadSendData));
 
