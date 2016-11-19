@@ -28,8 +28,8 @@ Status Nrf24l01::SetRfChannel(uint8_t channel) {
         struct Frame {
             uint8_t command;
 
-            uint8_t channel		: 7, // Sets the frequency channel nRF24l01 operates on
-                    Reserved	: 1;
+            uint8_t channel     : 7, // Sets the frequency channel nRF24l01 operates on
+                    Reserved    : 1;
         } frame;
         uint8_t raw_data[sizeof(Frame)];
     };

@@ -50,8 +50,8 @@ class TransportMock : public transport::ITransport {
 public:
 
     TransportMock(
-            uint8_t		*sent_data,
-            uint16_t	sent_data_size)
+            uint8_t     *sent_data,
+            uint16_t    sent_data_size)
         :
             sent_data_(sent_data),
             sent_data_size_(sent_data_size),
