@@ -93,7 +93,31 @@ Status Nrf24l01::SetPayloadSize(nrf24_driver::Rx rx, uint8_t payload_size) {
 
 Status Nrf24l01::SetRetries(uint8_t delay, uint8_t retries) {
 
-    return STATUS_FAILURE;
+    union RetriesSendData {
+        struct Frame {
+            uint8_t command;
+
+            uint8_t ARC : 4,
+                    ARD : 4;
+        } frame;
+        uint8_t raw_data[sizeof(Frame)];
+    };
+
+    const uint8_t kMaxDelay = 0x0F;
+    const uint8_t kMaxRetries = 0x0F;
+
+    if ((delay > kMaxDelay) ||
+        (retries > kMaxRetries))
+        return STATUS_OUT_OF_RANGE;
+
+    RetriesSendData data = { 0 };
+    data.frame.command = this->GetWriteAddress(REGISTER_SETUP_RETR);
+    data.frame.ARC = retries;
+    data.frame.ARD = delay;
+
+    this->transport_->Send(data.raw_data, sizeof(RetriesSendData));
+
+    return STATUS_OK;
 }
 
 Status Nrf24l01::SetRxAddress(nrf24_driver::Rx rx, uint8_t address[], uint8_t size) {

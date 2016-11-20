@@ -33,6 +33,7 @@ add_executable(
     Nrf24l01SetRfChannelTests.cc
     Nrf24l01SetPayloadSizeTests.cc
     Nrf24l01GetStatusRegister.cc
+    Nrf24l01SetRetries.cc
     ../Nrf24l01.cpp
     )
 
