@@ -55,6 +55,8 @@ public:
     virtual Status SetRxAddress(nrf24_driver::Rx rx, uint8_t address[], uint8_t size);
     virtual Status SetTxAddress(nrf24_driver::Tx tx, uint8_t address[], uint8_t size);
 
+    virtual nrf24_driver::NrfStatusRegister GetStatus(void);
+
 private:
     transport::ITransport *transport_;
     gpio_driver::IGpio *chip_enable_;

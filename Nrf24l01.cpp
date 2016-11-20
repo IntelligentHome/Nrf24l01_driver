@@ -106,6 +106,24 @@ Status Nrf24l01::SetTxAddress(nrf24_driver::Tx tx, uint8_t address[], uint8_t si
     return STATUS_FAILURE;
 }
 
+nrf24_driver::NrfStatusRegister Nrf24l01::GetStatus(void) {
+    union StatusSendData {
+        struct Frame {
+            uint8_t command;
+        } frame;
+        uint8_t raw_data[sizeof(Frame)];;
+    };
+
+    StatusSendData send_data = { 0 };
+    nrf24_driver::NrfStatusRegister status_reg = { 0 };
+
+    send_data.frame.command = 0xFF;
+
+    this->transport_->SendAndGet(send_data.raw_data, &status_reg.raw_data, sizeof(status_reg.raw_data));
+
+    return status_reg;
+}
+
 uint8_t Nrf24l01::GetWriteAddress(RegisterMap rm) {
     return static_cast<uint8_t>(rm) + REGISTER_WRITE_BASE_ADDRESS;
 }

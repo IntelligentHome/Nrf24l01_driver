@@ -55,7 +55,24 @@ public:
         :
             sent_data_(sent_data),
             sent_data_size_(sent_data_size),
-            sent_data_idx_(0)
+            sent_data_idx_(0),
+            get_data_size_(0)
+    {
+        memset(sent_data_, 0, sent_data_size_);
+    }
+
+    TransportMock(
+            uint8_t     *sent_data,
+            uint16_t    sent_data_size,
+            uint8_t     *get_data,
+            uint16_t    get_data_size)
+        :
+            sent_data_(sent_data),
+            sent_data_size_(sent_data_size),
+            sent_data_idx_(0),
+            get_data_(get_data),
+            get_data_size_(get_data_size),
+            get_data_idx_(0)
     {
         memset(sent_data_, 0, sent_data_size_);
     }
@@ -72,11 +89,21 @@ public:
     }
 
     virtual void Get(uint8_t recv_buff[], uint16_t size) { }
-    virtual void SendAndGet(uint8_t send_buff[], uint8_t recv_buff[], uint16_t size) {}
+    virtual void SendAndGet(uint8_t send_buff[], uint8_t recv_buff[], uint16_t size) {
+
+        for (uint16_t i = 0; i < size; i++) {
+            sent_data_[sent_data_idx_++] = send_buff[i];
+            recv_buff[i] = get_data_[get_data_idx_++];
+        }
+    }
 
     uint8_t         *sent_data_;
     const uint16_t  sent_data_size_;
     uint16_t        sent_data_idx_;
+
+    uint8_t         *get_data_;
+    const uint16_t  get_data_size_;
+    uint16_t        get_data_idx_;
 };
 
 
