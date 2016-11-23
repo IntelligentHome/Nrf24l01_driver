@@ -120,14 +120,89 @@ Status Nrf24l01::SetRetries(uint8_t delay, uint8_t retries) {
     return STATUS_OK;
 }
 
-Status Nrf24l01::SetRxAddress(nrf24_driver::Rx rx, uint8_t address[], uint8_t size) {
+Status Nrf24l01::SetAddress(nrf24_driver::Rx rx, const uint8_t address[], uint8_t size) {
 
-    return STATUS_FAILURE;
+    union Address5BytesSendData {
+        struct Frame {
+            uint8_t command;
+            uint8_t address[5];
+        } frame;
+        uint8_t raw_data[sizeof(Frame)];
+    };
+
+    union Address1ByteSendData {
+        struct Frame {
+            uint8_t command;
+            uint8_t address;
+        } frame;
+        uint8_t raw_data[sizeof(Frame)];
+    };
+
+    const uint8_t address_size = this->GetAddressSize(rx);
+    uint8_t send_data[sizeof(Address5BytesSendData)] = { 0 };
+    uint8_t send_data_size = 0;
+
+    if(address_size != size)
+        return STATUS_OUT_OF_RANGE;
+
+    switch (rx) {
+        case nrf24_driver::R0 :
+        case nrf24_driver::R1 :
+            {
+                send_data_size = sizeof(Address5BytesSendData);
+                Address5BytesSendData *data = (Address5BytesSendData *)send_data;
+
+                data->frame.command = this->GetWriteAddress(rx);
+                for (uint8_t i = 0; i < size; i++)
+                    data->frame.address[i] = address[i];
+            }
+            break;
+
+        case nrf24_driver::R2 :
+        case nrf24_driver::R3 :
+        case nrf24_driver::R4 :
+        case nrf24_driver::R5 :
+            {
+                send_data_size = sizeof(Address1ByteSendData);
+                Address1ByteSendData *data = (Address1ByteSendData *)send_data;
+
+                data->frame.command = this->GetWriteAddress(rx);
+                data->frame.address = address[0];
+            }
+            break;
+
+        default :
+            return STATUS_FAILURE;
+    }
+
+    this->transport_->Send(send_data, send_data_size);
+
+    return STATUS_OK;
 }
 
-Status Nrf24l01::SetTxAddress(nrf24_driver::Tx tx, uint8_t address[], uint8_t size) {
+Status Nrf24l01::SetAddress(nrf24_driver::Tx tx, const uint8_t address[], uint8_t size) {
 
-    return STATUS_FAILURE;
+    union AddressSendData {
+        struct Frame {
+            uint8_t command;
+            uint8_t address[5];
+        } frame;
+        uint8_t raw_data[sizeof(Frame)];
+    };
+
+    const uint8_t address_size = this->GetAddressSize(tx);
+    AddressSendData send_data = { 0 };
+
+    if (address_size != size)
+        return STATUS_OUT_OF_RANGE;
+
+    send_data.frame.command = this->GetWriteAddress(tx);
+    for (uint8_t i = 0; i < size; i++)
+        send_data.frame.address[i] = address[i];
+
+    this->transport_->Send(send_data.raw_data, sizeof(send_data.raw_data));
+
+    return STATUS_OK;
 }
 
 nrf24_driver::NrfStatusRegister Nrf24l01::GetStatus(void) {
@@ -152,8 +227,86 @@ uint8_t Nrf24l01::GetWriteAddress(RegisterMap rm) {
     return static_cast<uint8_t>(rm) + REGISTER_WRITE_BASE_ADDRESS;
 }
 
+uint8_t Nrf24l01::GetWriteAddress(nrf24_driver::Rx rx) {
+
+    switch (rx) {
+        case nrf24_driver::R0 :
+            return this->GetWriteAddress(REGISTER_RX_ADDR_P0);
+
+        case nrf24_driver::R1 :
+            return this->GetWriteAddress(REGISTER_RX_ADDR_P1);
+
+        case nrf24_driver::R2 :
+            return this->GetWriteAddress(REGISTER_RX_ADDR_P2);
+
+        case nrf24_driver::R3 :
+            return this->GetWriteAddress(REGISTER_RX_ADDR_P3);
+
+        case nrf24_driver::R4 :
+            return this->GetWriteAddress(REGISTER_RX_ADDR_P4);
+
+        case nrf24_driver::R5 :
+            return this->GetWriteAddress(REGISTER_RX_ADDR_P5);
+
+        default :
+            //TODO: Trigger reset ?
+            return 0xFF;
+    }
+}
+
+uint8_t Nrf24l01::GetWriteAddress(nrf24_driver::Tx tx) {
+
+    switch (tx) {
+        case nrf24_driver::T0 :
+            return this->GetWriteAddress(REGISTER_TX_ADDR);
+
+        default :
+            //TODO: Trigger reset ?
+            return 0xFF;
+    }
+}
+
 uint8_t Nrf24l01::GetReadAddress(RegisterMap rm) {
     return static_cast<uint8_t>(rm) + REGISTER_READ_BASE_ADDRESS;
+}
+
+uint8_t Nrf24l01::GetReadAddress(nrf24_driver::Rx rx) {
+
+    switch (rx) {
+        case nrf24_driver::R0 :
+            return this->GetReadAddress(REGISTER_RX_ADDR_P0);
+
+        case nrf24_driver::R1 :
+            return this->GetReadAddress(REGISTER_RX_ADDR_P1);
+
+        case nrf24_driver::R2 :
+            return this->GetReadAddress(REGISTER_RX_ADDR_P2);
+
+        case nrf24_driver::R3 :
+            return this->GetReadAddress(REGISTER_RX_ADDR_P3);
+
+        case nrf24_driver::R4 :
+            return this->GetReadAddress(REGISTER_RX_ADDR_P4);
+
+        case nrf24_driver::R5 :
+            return this->GetReadAddress(REGISTER_RX_ADDR_P5);
+
+        default :
+            //TODO: Trigger reset ?
+            return 0xFF;
+    }
+}
+
+uint8_t Nrf24l01::GetReadAddress(nrf24_driver::Tx tx) {
+
+    switch (tx) {
+        case nrf24_driver::T0 :
+            return this->GetReadAddress(REGISTER_TX_ADDR);
+
+        default :
+            //TODO: Trigger reset ?
+            return 0xFF;
+    }
 }
 
 uint8_t Nrf24l01::GetPipeNumber(nrf24_driver::Rx rx) {
@@ -171,6 +324,35 @@ uint8_t Nrf24l01::GetPipeNumber(nrf24_driver::Rx rx) {
         return 5;
     else
         return 0xFF;
+}
+
+uint8_t Nrf24l01::GetAddressSize(nrf24_driver::Rx rx) {
+
+    switch (rx) {
+        case nrf24_driver::R0 :
+        case nrf24_driver::R1 :
+            return 5;
+
+        case nrf24_driver::R2 :
+        case nrf24_driver::R3 :
+        case nrf24_driver::R4 :
+        case nrf24_driver::R5 :
+            return 1;
+
+        default :
+            return 0;
+    }
+}
+
+uint8_t Nrf24l01::GetAddressSize(nrf24_driver::Tx tx) {
+
+    switch (tx) {
+        case nrf24_driver::T0 :
+            return 5;
+
+        default :
+            return 0;
+    }
 }
 
 } /*namespace nrf24l01_driver*/

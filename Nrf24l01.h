@@ -52,8 +52,8 @@ public:
     virtual Status SetPayloadSize(uint8_t payload_size);
     virtual Status SetPayloadSize(nrf24_driver::Rx rx, uint8_t payload_size);
     virtual Status SetRetries(uint8_t delay, uint8_t retries);
-    virtual Status SetRxAddress(nrf24_driver::Rx rx, uint8_t address[], uint8_t size);
-    virtual Status SetTxAddress(nrf24_driver::Tx tx, uint8_t address[], uint8_t size);
+    virtual Status SetAddress(nrf24_driver::Rx rx, const uint8_t address[], uint8_t size);
+    virtual Status SetAddress(nrf24_driver::Tx tx, const uint8_t address[], uint8_t size);
 
     virtual nrf24_driver::NrfStatusRegister GetStatus(void);
 
@@ -62,8 +62,14 @@ private:
     gpio_driver::IGpio *chip_enable_;
 
     uint8_t GetWriteAddress(RegisterMap rm);
+    uint8_t GetWriteAddress(nrf24_driver::Rx rx);
+    uint8_t GetWriteAddress(nrf24_driver::Tx tx);
     uint8_t GetReadAddress(RegisterMap rm);
-    uint8_t GetPipeNumber(nrf24_driver::Rx);
+    uint8_t GetReadAddress(nrf24_driver::Rx rx);
+    uint8_t GetReadAddress(nrf24_driver::Tx tx);
+    uint8_t GetPipeNumber(nrf24_driver::Rx rx);
+    uint8_t GetAddressSize(nrf24_driver::Rx rx);
+    uint8_t GetAddressSize(nrf24_driver::Tx tx);
 };
 
 } /*namespace nrf24l01_driver*/
