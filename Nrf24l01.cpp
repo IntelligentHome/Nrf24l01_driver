@@ -247,6 +247,30 @@ Status Nrf24l01::GetPayload(uint8_t payload[], const uint8_t size) {
     return STATUS_OK;
 }
 
+Status Nrf24l01::SetPayload(const uint8_t payload[], const uint8_t size) {
+    union SetPayloadData {
+        struct Frame {
+            uint8_t command;
+            uint8_t payload[0x20];
+        } frame;
+        uint8_t raw_data[sizeof(frame)];
+    };
+
+    SetPayloadData set_payload = { 0 };
+
+    if (size > 0x20)
+        return STATUS_OUT_OF_RANGE;
+
+    set_payload.frame.command = W_TX_PAYLOAD;
+
+    for (int i = 0; i < size; i++)
+        set_payload.frame.payload[i] = payload[i];
+
+    this->transport_->Send(set_payload.raw_data, sizeof(set_payload.raw_data));
+
+    return STATUS_OK;
+}
+
 uint8_t Nrf24l01::GetWriteAddress(RegisterMap rm) {
     return static_cast<uint8_t>(rm) + REGISTER_WRITE_BASE_ADDRESS;
 }
