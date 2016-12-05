@@ -9,6 +9,19 @@ namespace nrf24l01_driver {
 #define REGISTER_READ_BASE_ADDRESS 0x00
 #define REGISTER_WRITE_BASE_ADDRESS 0x20
 
+enum CommandMap {
+    R_REGISTER      = 0x00,
+    W_REGISTER      = 0x20,
+    R_RX_PAYLOAD    = 0x61,
+    W_TX_PAYLOAD    = 0xA0,
+    FLUSH_TX        = 0xE1,
+    FLUSH_RX        = 0xE2,
+    REUSE_TX_PL     = 0xE3,
+    ACTIVATE        = 0x50,
+    R_RX_PL_WID     = 0x60,
+    W_ACK_PAYLOAD   = 0xA8,
+};
+
 enum RegisterMap {
     REGISTER_CONFIG         = 0x00,
     REGISTER_EN_AA          = 0x01,
@@ -56,6 +69,7 @@ public:
     virtual Status SetAddress(nrf24_driver::Tx tx, const uint8_t address[], uint8_t size);
 
     virtual nrf24_driver::NrfStatusRegister GetStatus(void);
+    virtual Status GetPayload(uint8_t payload[], const uint8_t size);
 
 private:
     transport::ITransport *transport_;

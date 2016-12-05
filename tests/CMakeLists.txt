@@ -35,6 +35,7 @@ add_executable(
     Nrf24l01GetStatusRegister.cc
     Nrf24l01SetRetries.cc
     Nrf24l01SetAddressTests.cc
+    Nrf24l01GetPayloadTests.cc
     ../Nrf24l01.cpp
     )
 

@@ -223,6 +223,30 @@ nrf24_driver::NrfStatusRegister Nrf24l01::GetStatus(void) {
     return status_reg;
 }
 
+Status Nrf24l01::GetPayload(uint8_t payload[], const uint8_t size) {
+    union GetPayloadData {
+        struct Frame {
+            uint8_t command;
+            uint8_t payload[0x20];
+        } frame;
+        uint8_t raw_data[sizeof(Frame)];
+    };
+
+    GetPayloadData send_data = { 0 };
+    GetPayloadData get_data = { 0 };
+
+    if (size > 0x20)
+        return STATUS_OUT_OF_RANGE;
+
+    send_data.frame.command = R_RX_PAYLOAD;
+    this->transport_->SendAndGet(send_data.raw_data, get_data.raw_data, sizeof(get_data.raw_data));
+
+    for (int i = 0; i < size; i++)
+        payload[i] = get_data.frame.payload[i];
+
+    return STATUS_OK;
+}
+
 uint8_t Nrf24l01::GetWriteAddress(RegisterMap rm) {
     return static_cast<uint8_t>(rm) + REGISTER_WRITE_BASE_ADDRESS;
 }
