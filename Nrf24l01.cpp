@@ -39,7 +39,8 @@ Status Nrf24l01::SetRfChannel(uint8_t channel) {
     if(channel_max < channel)
         return STATUS_OUT_OF_RANGE;
 
-    RfSendData data = { 0 };
+    RfSendData data = { { 0 } };
+
     data.frame.command = this->GetWriteAddress(REGISTER_RF_CH);
     data.frame.channel = channel;
 
@@ -82,7 +83,7 @@ Status Nrf24l01::SetPayloadSize(nrf24_driver::Rx rx, uint8_t payload_size) {
     if (payload_size > 0x20)
         return STATUS_OUT_OF_RANGE;
 
-    PayloadSendData data = { 0 };
+    PayloadSendData data = { { 0 } };
     data.frame.command = static_cast<uint8_t>(this->GetWriteAddress(REGISTER_RX_PW_P0) + this->GetPipeNumber(rx));
     data.frame.rx_pw = payload_size;
 
@@ -110,7 +111,7 @@ Status Nrf24l01::SetRetries(uint8_t delay, uint8_t retries) {
         (retries > kMaxRetries))
         return STATUS_OUT_OF_RANGE;
 
-    RetriesSendData data = { 0 };
+    RetriesSendData data = { { 0 } };
     data.frame.command = this->GetWriteAddress(REGISTER_SETUP_RETR);
     data.frame.ARC = retries;
     data.frame.ARD = delay;
@@ -150,7 +151,7 @@ Status Nrf24l01::SetAddress(nrf24_driver::Rx rx, const uint8_t address[], uint8_
         case nrf24_driver::R1 :
             {
                 send_data_size = sizeof(Address5BytesSendData);
-                Address5BytesSendData *data = (Address5BytesSendData *)send_data;
+                Address5BytesSendData *data = reinterpret_cast<Address5BytesSendData *>(send_data);
 
                 data->frame.command = this->GetWriteAddress(rx);
                 for (uint8_t i = 0; i < size; i++)
@@ -164,7 +165,7 @@ Status Nrf24l01::SetAddress(nrf24_driver::Rx rx, const uint8_t address[], uint8_
         case nrf24_driver::R5 :
             {
                 send_data_size = sizeof(Address1ByteSendData);
-                Address1ByteSendData *data = (Address1ByteSendData *)send_data;
+                Address1ByteSendData *data = reinterpret_cast<Address1ByteSendData *>(send_data);
 
                 data->frame.command = this->GetWriteAddress(rx);
                 data->frame.address = address[0];
@@ -191,7 +192,7 @@ Status Nrf24l01::SetAddress(nrf24_driver::Tx tx, const uint8_t address[], uint8_
     };
 
     const uint8_t address_size = this->GetAddressSize(tx);
-    AddressSendData send_data = { 0 };
+    AddressSendData send_data = { { 0 } };
 
     if (address_size != size)
         return STATUS_OUT_OF_RANGE;
@@ -213,7 +214,7 @@ nrf24_driver::NrfStatusRegister Nrf24l01::GetStatus(void) {
         uint8_t raw_data[sizeof(Frame)];;
     };
 
-    StatusSendData send_data = { 0 };
+    StatusSendData send_data = { { 0 } };
     nrf24_driver::NrfStatusRegister status_reg = { 0 };
 
     send_data.frame.command = 0xFF;
@@ -232,8 +233,8 @@ Status Nrf24l01::GetPayload(uint8_t payload[], const uint8_t size) {
         uint8_t raw_data[sizeof(Frame)];
     };
 
-    GetPayloadData send_data = { 0 };
-    GetPayloadData get_data = { 0 };
+    GetPayloadData send_data = { { 0 } };
+    GetPayloadData get_data = { { 0 } };
 
     if (size > 0x20)
         return STATUS_OUT_OF_RANGE;
@@ -256,7 +257,7 @@ Status Nrf24l01::SetPayload(const uint8_t payload[], const uint8_t size) {
         uint8_t raw_data[sizeof(frame)];
     };
 
-    SetPayloadData set_payload = { 0 };
+    SetPayloadData set_payload = { { 0 } };
 
     if (size > 0x20)
         return STATUS_OUT_OF_RANGE;
@@ -280,7 +281,7 @@ Status Nrf24l01::SetAutoAck(const uint8_t auto_ack) {
         uint8_t raw_data[sizeof(frame)];
     };
 
-    SetAutoAckData set_auto_ack = { 0 };
+    SetAutoAckData set_auto_ack = { { 0 } };
 
     if (auto_ack > 0x3F)
         return STATUS_OUT_OF_RANGE;
