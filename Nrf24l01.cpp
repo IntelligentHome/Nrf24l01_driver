@@ -271,6 +271,28 @@ Status Nrf24l01::SetPayload(const uint8_t payload[], const uint8_t size) {
     return STATUS_OK;
 }
 
+Status Nrf24l01::SetAutoAck(const uint8_t auto_ack) {
+    union SetAutoAckData {
+        struct Frame {
+            uint8_t command;
+            uint8_t auto_ack;
+        } frame;
+        uint8_t raw_data[sizeof(frame)];
+    };
+
+    SetAutoAckData set_auto_ack = { 0 };
+
+    if (auto_ack > 0x3F)
+        return STATUS_OUT_OF_RANGE;
+
+    set_auto_ack.frame.command = this->GetWriteAddress(REGISTER_EN_AA);
+    set_auto_ack.frame.auto_ack = auto_ack;
+
+    this->transport_->Send(set_auto_ack.raw_data, sizeof(set_auto_ack.raw_data));
+
+    return STATUS_OK;
+}
+
 uint8_t Nrf24l01::GetWriteAddress(RegisterMap rm) {
     return static_cast<uint8_t>(rm) + REGISTER_WRITE_BASE_ADDRESS;
 }

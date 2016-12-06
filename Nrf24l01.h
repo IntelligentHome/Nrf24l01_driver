@@ -68,6 +68,7 @@ public:
     virtual Status SetAddress(nrf24_driver::Rx rx, const uint8_t address[], uint8_t size);
     virtual Status SetAddress(nrf24_driver::Tx tx, const uint8_t address[], uint8_t size);
     virtual Status SetPayload(const uint8_t payload[], const uint8_t size);
+    virtual Status SetAutoAck(const uint8_t auto_ack);
 
     virtual nrf24_driver::NrfStatusRegister GetStatus(void);
     virtual Status GetPayload(uint8_t payload[], const uint8_t size);
