@@ -215,7 +215,7 @@ nrf24_driver::NrfStatusRegister Nrf24l01::GetStatus(void) {
     };
 
     StatusSendData send_data = { { 0 } };
-    nrf24_driver::NrfStatusRegister status_reg = { 0 };
+    nrf24_driver::NrfStatusRegister status_reg = { { 0 } };
 
     send_data.frame.command = 0xFF;
 
@@ -254,7 +254,7 @@ Status Nrf24l01::SetPayload(const uint8_t payload[], const uint8_t size) {
             uint8_t command;
             uint8_t payload[0x20];
         } frame;
-        uint8_t raw_data[sizeof(frame)];
+        uint8_t raw_data[sizeof(Frame)];
     };
 
     SetPayloadData set_payload = { { 0 } };
@@ -278,7 +278,7 @@ Status Nrf24l01::SetAutoAck(const uint8_t auto_ack) {
             uint8_t command;
             uint8_t auto_ack;
         } frame;
-        uint8_t raw_data[sizeof(frame)];
+        uint8_t raw_data[sizeof(Frame)];
     };
 
     SetAutoAckData set_auto_ack = { { 0 } };
