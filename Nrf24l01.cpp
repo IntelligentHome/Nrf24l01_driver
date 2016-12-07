@@ -364,6 +364,26 @@ Status Nrf24l01::StopListening(void) {
     return STATUS_OK;
 }
 
+Status Nrf24l01::SendData(void) {
+
+    ConfigData config_data = { { 0 } };
+
+    config_data.frame.command = this->GetReadAddress(REGISTER_CONFIG);
+
+    this->transport_->SendAndGet(config_data.raw_data, config_data.raw_data, sizeof(config_data.raw_data));
+
+    config_data.frame.command = this->GetWriteAddress(REGISTER_CONFIG);
+    config_data.frame.pwr_up = 1;
+    config_data.frame.prim_rx = 0;
+
+    this->transport_->Send(config_data.raw_data, sizeof(config_data.raw_data));
+
+    this->chip_enable_->Set();   // TODO: This should be changed to
+    this->chip_enable_->Clear(); // SetFor(10us) function.
+
+    return STATUS_OK;
+}
+
 Status Nrf24l01::SetDefaultConfig(void) {
     ConfigData config_data = { { 0 } };
 

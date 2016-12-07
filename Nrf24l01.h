@@ -73,6 +73,8 @@ public:
     virtual Status StartListening(void);
     virtual Status StopListening(void);
 
+    virtual Status SendData(void);
+
     virtual nrf24_driver::NrfStatusRegister GetStatus(void);
     virtual Status GetPayload(uint8_t payload[], const uint8_t size);
 
