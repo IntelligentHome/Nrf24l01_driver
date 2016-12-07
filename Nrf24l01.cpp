@@ -328,6 +328,42 @@ Status Nrf24l01::SetAutoAck(const uint8_t auto_ack) {
     return STATUS_OK;
 }
 
+Status Nrf24l01::StartListening(void) {
+    ConfigData config_data = { { 0 } };
+
+    config_data.frame.command = this->GetReadAddress(REGISTER_CONFIG);
+
+    this->transport_->SendAndGet(config_data.raw_data, config_data.raw_data, sizeof(config_data.raw_data));
+
+    config_data.frame.command = this->GetWriteAddress(REGISTER_CONFIG);
+    config_data.frame.prim_rx = 1;
+    config_data.frame.pwr_up  = 1;
+
+    this->transport_->Send(config_data.raw_data, sizeof(config_data.raw_data));
+
+    this->chip_enable_->Set();
+
+    return STATUS_OK;
+}
+
+Status Nrf24l01::StopListening(void) {
+
+    ConfigData config_data = { { 0 } };
+
+    config_data.frame.command = this->GetReadAddress(REGISTER_CONFIG);
+
+    this->transport_->SendAndGet(config_data.raw_data, config_data.raw_data, sizeof(config_data.raw_data));
+
+    config_data.frame.command   = this->GetWriteAddress(REGISTER_CONFIG);
+    config_data.frame.pwr_up    = 0;
+
+    this->transport_->Send(config_data.raw_data, sizeof(config_data.raw_data));
+
+    this->chip_enable_->Clear();
+
+    return STATUS_OK;
+}
+
 Status Nrf24l01::SetDefaultConfig(void) {
     ConfigData config_data = { { 0 } };
 
