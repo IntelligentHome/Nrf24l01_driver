@@ -21,7 +21,12 @@ TEST(Nrf24l01, Init) {
     GpioMock gpio(&set_cnt, &clear_cnt, &toggle_cnt, &state);
     TransportMock transport(sent_data, sizeof(sent_data));
 
-    const uint8_t expected_transport[] = { 0x25, 0x60 };
+    const uint8_t expected_transport[] = {
+        0x25, 0x60, // Set Channel
+        0x20, 0x0D,// Set default config, Rx mode, Power Down, crc0-2byte, enable crc
+        0x00, 0x00,
+        0x00, 0x00,
+    };
 
     nrf24l01_driver::Nrf24l01 nrf(
             &transport,

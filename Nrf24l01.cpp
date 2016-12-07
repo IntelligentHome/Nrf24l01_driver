@@ -3,6 +3,38 @@
 
 namespace nrf24l01_driver {
 
+union ConfigData {
+    struct Frame {
+        uint8_t command;
+
+        uint8_t prim_rx     : 1,    // RX/TX control (1:PRX, 0:PTX)
+
+                pwr_up      : 1,    // 1 : POWER UP, 0 : POWER DOWN
+
+                crc0        : 1,    // CRC encoding scheme
+                                    // 0 - 1 byte
+                                    // 1 - 2 bytes
+
+                en_crc      : 1,    // Enable CRC. Forced high if one of
+                                    // the bits in the EN_AA is high.
+
+                mask_max_rt : 1,    // Mask interrupt caused by MAX_RT.
+                                    // 1 : No interrupt
+                                    // 0 : Reflect MAX_RT as active low IRQ.
+
+                mask_tx_ds  : 1,    // Mask interrupt caused by TX_DS.
+                                    // 1 : No interrupt
+                                    // 0 : Reflect TX_DS as active low IRQ.
+
+                mask_rx_dr  : 1,    // Mask interrupt caused by RX_DS.
+                                    // 1 : No interrupt
+                                    // 0 : Reflect RX_DR as active low IRQ.
+
+                reserved    : 1;
+    } frame;
+    uint8_t raw_data[sizeof(Frame)];
+};
+
 Nrf24l01::Nrf24l01(
         transport::ITransport *transport,
         gpio_driver::IGpio *chip_enable)
@@ -19,6 +51,8 @@ Nrf24l01::Nrf24l01(
 Status Nrf24l01::SetDefaults(void) {
 
     this->SetRfChannel(0x60);
+    this->SetDefaultConfig();
+
     return STATUS_FAILURE;
 }
 
@@ -292,6 +326,19 @@ Status Nrf24l01::SetAutoAck(const uint8_t auto_ack) {
     this->transport_->Send(set_auto_ack.raw_data, sizeof(set_auto_ack.raw_data));
 
     return STATUS_OK;
+}
+
+Status Nrf24l01::SetDefaultConfig(void) {
+    ConfigData config_data = { { 0 } };
+
+    config_data.frame.command = this->GetWriteAddress(REGISTER_CONFIG);
+    config_data.frame.crc0    = 1;
+    config_data.frame.prim_rx = 1;
+    config_data.frame.en_crc  = 1;
+
+    this->transport_->Send(config_data.raw_data, sizeof(config_data.raw_data));
+
+    return STATUS_OK;;
 }
 
 uint8_t Nrf24l01::GetWriteAddress(RegisterMap rm) {

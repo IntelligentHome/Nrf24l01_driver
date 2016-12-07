@@ -77,6 +77,8 @@ private:
     transport::ITransport *transport_;
     gpio_driver::IGpio *chip_enable_;
 
+    Status SetDefaultConfig(void);
+
     uint8_t GetWriteAddress(RegisterMap rm);
     uint8_t GetWriteAddress(nrf24_driver::Rx rx);
     uint8_t GetWriteAddress(nrf24_driver::Tx tx);
