@@ -40,6 +40,7 @@ add_executable(
     Nrf24l01SetAutoAckTests.cc
     Nrf24l01StartStopListening.cc
     Nrf24l01SendData.cc
+    Nrf24l01FlushTests.cc
     ../Nrf24l01.cpp
     )
 

@@ -72,6 +72,8 @@ public:
 
     virtual Status StartListening(void);
     virtual Status StopListening(void);
+    virtual Status FlushRx(void);
+    virtual Status FlushTx(void);
 
     virtual Status SendData(void);
 

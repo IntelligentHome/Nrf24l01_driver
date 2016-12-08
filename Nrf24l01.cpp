@@ -397,6 +397,42 @@ Status Nrf24l01::SetDefaultConfig(void) {
     return STATUS_OK;;
 }
 
+Status Nrf24l01::FlushRx(void) {
+    union FlushRxData {
+        struct Frame {
+            uint8_t command;
+        } frame;
+
+        uint8_t raw_data[sizeof(Frame)];
+    };
+
+    FlushRxData flush_rx = { { 0 } };
+
+    flush_rx.frame.command = FLUSH_RX;
+
+    this->transport_->Send(flush_rx.raw_data, sizeof(flush_rx.raw_data));
+
+    return STATUS_OK;
+}
+
+Status Nrf24l01::FlushTx(void) {
+    union FlushTxData {
+        struct Frame {
+            uint8_t command;
+        } frame;
+
+        uint8_t raw_data[sizeof(Frame)];
+    };
+
+    FlushTxData flush_tx = { { 0 } };
+
+    flush_tx.frame.command = FLUSH_TX;
+
+    this->transport_->Send(flush_tx.raw_data, sizeof(flush_tx.raw_data));
+
+    return STATUS_OK;
+}
+
 uint8_t Nrf24l01::GetWriteAddress(RegisterMap rm) {
     return static_cast<uint8_t>(rm) + REGISTER_WRITE_BASE_ADDRESS;
 }
