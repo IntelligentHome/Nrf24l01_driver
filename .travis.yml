@@ -6,6 +6,9 @@ before_install:
     - git clone https://github.com/IntelligentHome/External.git ../External
     - cd ../External
     - git submodule update --init --remote --recursive
+    - 'if [ "${TRAVIS_BRANCH}" eq "develop" ]; then
+        git checkout -b develop origin/develop;
+      fi'
     - cd ../Nrf24l01_driver
 
 install:
