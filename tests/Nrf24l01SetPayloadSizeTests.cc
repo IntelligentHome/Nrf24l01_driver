@@ -1,15 +1,15 @@
 #include "gtest/gtest.h"
 #include "Nrf24l01.h"
-#include "Nrf24l01Common.h"
+#include "Mocks.h"
 
 namespace test_nrf24l01 {
 
-TEST(Nrf24l01, SetPaylaodSizeTo10) {
+TEST(Nrf24l01_SetPayloadSize, SetPaylaodSizeTo10) {
 
     uint8_t sent_data[200];
 
-    GpioMock mock_gpio;
-    TransportMock mock_transport(sent_data, sizeof(sent_data));
+    test_mocks::GpioMock mock_gpio;
+    test_mocks::TransportMock mock_transport(sent_data, sizeof(sent_data));
 
     const uint8_t expected_transport[] = { 
         0x31, 0x10, // Payload for Rx0
@@ -35,12 +35,12 @@ TEST(Nrf24l01, SetPaylaodSizeTo10) {
                 << (int)sent_data[i] << " Expected " << (int)expected_transport[i] << " at position: " << i << std::endl;
 }
 
-TEST(Nrf24l01, SetPayloadSizeForRx0) {
+TEST(Nrf24l01_SetPayloadSize, SetPayloadSizeForRx0) {
 
     uint8_t sent_data[200];
 
-    GpioMock mock_gpio;
-    TransportMock mock_transport(sent_data, sizeof(sent_data));
+    test_mocks::GpioMock mock_gpio;
+    test_mocks::TransportMock mock_transport(sent_data, sizeof(sent_data));
 
     const uint8_t expected_transport[] = {
         0x31, 0x10, // Payload for Rx0
@@ -61,12 +61,12 @@ TEST(Nrf24l01, SetPayloadSizeForRx0) {
                 << (int)sent_data[i] << " Expected " << (int)expected_transport[i] << " at position: " << i << std::endl;
 }
 
-TEST(Nrf24l01, SetPayloadSizeForRx1) {
+TEST(Nrf24l01_SetPayloadSize, SetPayloadSizeForRx1) {
 
     uint8_t sent_data[200];
 
-    GpioMock mock_gpio;
-    TransportMock mock_transport(sent_data, sizeof(sent_data));
+    test_mocks::GpioMock mock_gpio;
+    test_mocks::TransportMock mock_transport(sent_data, sizeof(sent_data));
 
     const uint8_t expected_transport[] = {
         0x32, 0x10, // Payload for Rx1
@@ -87,12 +87,12 @@ TEST(Nrf24l01, SetPayloadSizeForRx1) {
                 << (int)sent_data[i] << " Expected " << (int)expected_transport[i] << " at position: " << i << std::endl;
 }
 
-TEST(Nrf24l01, SetPayloadSizeForRx2) {
+TEST(Nrf24l01_SetPayloadSize, SetPayloadSizeForRx2) {
 
     uint8_t sent_data[200];
 
-    GpioMock mock_gpio;
-    TransportMock mock_transport(sent_data, sizeof(sent_data));
+    test_mocks::GpioMock mock_gpio;
+    test_mocks::TransportMock mock_transport(sent_data, sizeof(sent_data));
 
     const uint8_t expected_transport[] = {
         0x33, 0x10, // Payload for Rx2
@@ -113,12 +113,12 @@ TEST(Nrf24l01, SetPayloadSizeForRx2) {
                 << (int)sent_data[i] << " Expected " << (int)expected_transport[i] << " at position: " << i << std::endl;
 }
 
-TEST(Nrf24l01, SetPayloadSizeForRx3) {
+TEST(Nrf24l01_SetPayloadSize, SetPayloadSizeForRx3) {
 
     uint8_t sent_data[200];
 
-    GpioMock mock_gpio;
-    TransportMock mock_transport(sent_data, sizeof(sent_data));
+    test_mocks::GpioMock mock_gpio;
+    test_mocks::TransportMock mock_transport(sent_data, sizeof(sent_data));
 
     const uint8_t expected_transport[] = {
         0x34, 0x10, // Payload for Rx3
@@ -139,12 +139,12 @@ TEST(Nrf24l01, SetPayloadSizeForRx3) {
                 << (int)sent_data[i] << " Expected " << (int)expected_transport[i] << " at position: " << i << std::endl;
 }
 
-TEST(Nrf24l01, SetPayloadSizeForRx4) {
+TEST(Nrf24l01_SetPayloadSize, SetPayloadSizeForRx4) {
 
     uint8_t sent_data[200];
 
-    GpioMock mock_gpio;
-    TransportMock mock_transport(sent_data, sizeof(sent_data));
+    test_mocks::GpioMock mock_gpio;
+    test_mocks::TransportMock mock_transport(sent_data, sizeof(sent_data));
 
     const uint8_t expected_transport[] = {
         0x35, 0x10, // Payload for Rx4
@@ -165,12 +165,12 @@ TEST(Nrf24l01, SetPayloadSizeForRx4) {
                 << (int)sent_data[i] << " Expected " << (int)expected_transport[i] << " at position: " << i << std::endl;
 }
 
-TEST(Nrf24l01, SetPayloadSizeForRx5) {
+TEST(Nrf24l01_SetPayloadSize, SetPayloadSizeForRx5) {
 
     uint8_t sent_data[200];
 
-    GpioMock mock_gpio;
-    TransportMock mock_transport(sent_data, sizeof(sent_data));
+    test_mocks::GpioMock mock_gpio;
+    test_mocks::TransportMock mock_transport(sent_data, sizeof(sent_data));
 
     const uint8_t expected_transport[] = {
         0x36, 0x10, // Payload for Rx5
@@ -191,12 +191,12 @@ TEST(Nrf24l01, SetPayloadSizeForRx5) {
                 << (int)sent_data[i] << " Expected " << (int)expected_transport[i] << " at position: " << i << std::endl;
 }
 
-TEST(Nrf24l01, SetPaylaodSizeCoupleTimes) {
+TEST(Nrf24l01_SetPayloadSize, SetPaylaodSizeCoupleTimes) {
 
     uint8_t sent_data[200];
 
-    GpioMock mock_gpio;
-    TransportMock mock_transport(sent_data, sizeof(sent_data));
+    test_mocks::GpioMock mock_gpio;
+    test_mocks::TransportMock mock_transport(sent_data, sizeof(sent_data));
 
     const uint8_t expected_transport[] = { 
         0x31, 0x10, // Payload for Rx0
@@ -229,12 +229,12 @@ TEST(Nrf24l01, SetPaylaodSizeCoupleTimes) {
                 << (int)sent_data[i] << " Expected " << (int)expected_transport[i] << " at position: " << i << std::endl;
 }
 
-TEST(Nrf24l01, NegativeTryToSetMoreThanMax) {
+TEST(Nrf24l01_SetPayloadSize, NegativeTryToSetMoreThanMax) {
 
     uint8_t sent_data[200];
 
-    GpioMock mock_gpio;
-    TransportMock mock_transport(sent_data, sizeof(sent_data));
+    test_mocks::GpioMock mock_gpio;
+    test_mocks::TransportMock mock_transport(sent_data, sizeof(sent_data));
 
     const uint8_t expected_transport[] = { 
         0x00, 0x00,

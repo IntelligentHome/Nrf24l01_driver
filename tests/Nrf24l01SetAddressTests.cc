@@ -1,16 +1,16 @@
 #include "gtest/gtest.h"
 #include "Nrf24l01.h"
-#include "Nrf24l01Common.h"
+#include "Mocks.h"
 
 namespace test_nrf24l01 {
 
-TEST(Nrf24l01, InvalidSizeOfTxAddressTest_TryToSetLessThan5Bytes) {
+TEST(Nrf24l01_SetAddress, InvalidSizeOfTxAddressTest_TryToSetLessThan5Bytes) {
 
     uint8_t sent_data[200];
 
     Status status;
-    GpioMock mock_gpio;
-    TransportMock mock_transport(sent_data, sizeof(sent_data));
+    test_mocks::GpioMock mock_gpio;
+    test_mocks::TransportMock mock_transport(sent_data, sizeof(sent_data));
 
     const uint8_t expected_transport[] = {
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -54,13 +54,13 @@ TEST(Nrf24l01, InvalidSizeOfTxAddressTest_TryToSetLessThan5Bytes) {
                 << " at position: " << i << std::endl;
 }
 
-TEST(Nrf24l01, InvalidSizeOfTxAddressTest_TryToSetGreaterThan5Bytes) {
+TEST(Nrf24l01_SetAddress, InvalidSizeOfTxAddressTest_TryToSetGreaterThan5Bytes) {
 
     uint8_t sent_data[200];
 
     Status status;
-    GpioMock mock_gpio;
-    TransportMock mock_transport(sent_data, sizeof(sent_data));
+    test_mocks::GpioMock mock_gpio;
+    test_mocks::TransportMock mock_transport(sent_data, sizeof(sent_data));
 
     const uint8_t expected_transport[] = {
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -104,13 +104,13 @@ TEST(Nrf24l01, InvalidSizeOfTxAddressTest_TryToSetGreaterThan5Bytes) {
                 << " at position: " << i << std::endl;
 }
 
-TEST(Nrf24l01, InvalidSizeOfR0AddressTest_TryToSetLessThan5Bytes) {
+TEST(Nrf24l01_SetAddress, InvalidSizeOfR0AddressTest_TryToSetLessThan5Bytes) {
 
     uint8_t sent_data[200];
 
     Status status;
-    GpioMock mock_gpio;
-    TransportMock mock_transport(sent_data, sizeof(sent_data));
+    test_mocks::GpioMock mock_gpio;
+    test_mocks::TransportMock mock_transport(sent_data, sizeof(sent_data));
 
     const uint8_t expected_transport[] = {
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -154,13 +154,13 @@ TEST(Nrf24l01, InvalidSizeOfR0AddressTest_TryToSetLessThan5Bytes) {
                 << " at position: " << i << std::endl;
 }
 
-TEST(Nrf24l01, InvalidSizeOfR0AddressTest_TryToSetGreaterThan5Bytes) {
+TEST(Nrf24l01_SetAddress, InvalidSizeOfR0AddressTest_TryToSetGreaterThan5Bytes) {
 
     uint8_t sent_data[200];
 
     Status status;
-    GpioMock mock_gpio;
-    TransportMock mock_transport(sent_data, sizeof(sent_data));
+    test_mocks::GpioMock mock_gpio;
+    test_mocks::TransportMock mock_transport(sent_data, sizeof(sent_data));
 
     const uint8_t expected_transport[] = {
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -205,13 +205,13 @@ TEST(Nrf24l01, InvalidSizeOfR0AddressTest_TryToSetGreaterThan5Bytes) {
 }
 
 
-TEST(Nrf24l01, InvalidSizeOfR1AddressTest_TryToSetLessThan5Bytes) {
+TEST(Nrf24l01_SetAddress, InvalidSizeOfR1AddressTest_TryToSetLessThan5Bytes) {
 
     uint8_t sent_data[200];
 
     Status status;
-    GpioMock mock_gpio;
-    TransportMock mock_transport(sent_data, sizeof(sent_data));
+    test_mocks::GpioMock mock_gpio;
+    test_mocks::TransportMock mock_transport(sent_data, sizeof(sent_data));
 
     const uint8_t expected_transport[] = {
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -255,13 +255,13 @@ TEST(Nrf24l01, InvalidSizeOfR1AddressTest_TryToSetLessThan5Bytes) {
                 << " at position: " << i << std::endl;
 }
 
-TEST(Nrf24l01, InvalidSizeOfR1AddressTest_TryToSetGreaterThan5Bytes) {
+TEST(Nrf24l01_SetAddress, InvalidSizeOfR1AddressTest_TryToSetGreaterThan5Bytes) {
 
     uint8_t sent_data[200];
 
     Status status;
-    GpioMock mock_gpio;
-    TransportMock mock_transport(sent_data, sizeof(sent_data));
+    test_mocks::GpioMock mock_gpio;
+    test_mocks::TransportMock mock_transport(sent_data, sizeof(sent_data));
 
     const uint8_t expected_transport[] = {
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -306,13 +306,13 @@ TEST(Nrf24l01, InvalidSizeOfR1AddressTest_TryToSetGreaterThan5Bytes) {
 }
 
 
-TEST(Nrf24l01, InvalidSizeOfR2AddressTest_TryToSetLessThan1Bytes) {
+TEST(Nrf24l01_SetAddress, InvalidSizeOfR2AddressTest_TryToSetLessThan1Bytes) {
 
     uint8_t sent_data[200];
 
     Status status;
-    GpioMock mock_gpio;
-    TransportMock mock_transport(sent_data, sizeof(sent_data));
+    test_mocks::GpioMock mock_gpio;
+    test_mocks::TransportMock mock_transport(sent_data, sizeof(sent_data));
 
     const uint8_t expected_transport[] = {
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -339,13 +339,13 @@ TEST(Nrf24l01, InvalidSizeOfR2AddressTest_TryToSetLessThan1Bytes) {
 }
 
 
-TEST(Nrf24l01, InvalidSizeOfR2AddressTest_TryToSetGreaterThan1Bytes) {
+TEST(Nrf24l01_SetAddress, InvalidSizeOfR2AddressTest_TryToSetGreaterThan1Bytes) {
 
     uint8_t sent_data[200];
 
     Status status;
-    GpioMock mock_gpio;
-    TransportMock mock_transport(sent_data, sizeof(sent_data));
+    test_mocks::GpioMock mock_gpio;
+    test_mocks::TransportMock mock_transport(sent_data, sizeof(sent_data));
 
     const uint8_t expected_transport[] = {
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -391,13 +391,13 @@ TEST(Nrf24l01, InvalidSizeOfR2AddressTest_TryToSetGreaterThan1Bytes) {
 
 
 
-TEST(Nrf24l01, InvalidSizeOfR3AddressTest_TryToSetLessThan1Bytes) {
+TEST(Nrf24l01_SetAddress, InvalidSizeOfR3AddressTest_TryToSetLessThan1Bytes) {
 
     uint8_t sent_data[200];
 
     Status status;
-    GpioMock mock_gpio;
-    TransportMock mock_transport(sent_data, sizeof(sent_data));
+    test_mocks::GpioMock mock_gpio;
+    test_mocks::TransportMock mock_transport(sent_data, sizeof(sent_data));
 
     const uint8_t expected_transport[] = {
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -423,13 +423,13 @@ TEST(Nrf24l01, InvalidSizeOfR3AddressTest_TryToSetLessThan1Bytes) {
                 << " at position: " << i << std::endl;
 }
 
-TEST(Nrf24l01, InvalidSizeOfR3AddressTest_TryToSetGreaterThan1Bytes) {
+TEST(Nrf24l01_SetAdderss, InvalidSizeOfR3AddressTest_TryToSetGreaterThan1Bytes) {
 
     uint8_t sent_data[200];
 
     Status status;
-    GpioMock mock_gpio;
-    TransportMock mock_transport(sent_data, sizeof(sent_data));
+    test_mocks::GpioMock mock_gpio;
+    test_mocks::TransportMock mock_transport(sent_data, sizeof(sent_data));
 
     const uint8_t expected_transport[] = {
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -474,13 +474,13 @@ TEST(Nrf24l01, InvalidSizeOfR3AddressTest_TryToSetGreaterThan1Bytes) {
 }
 
 
-TEST(Nrf24l01, InvalidSizeOfR4AddressTest_TryToSetLessThan1Bytes) {
+TEST(Nrf24l01_SetAddress, InvalidSizeOfR4AddressTest_TryToSetLessThan1Bytes) {
 
     uint8_t sent_data[200];
 
     Status status;
-    GpioMock mock_gpio;
-    TransportMock mock_transport(sent_data, sizeof(sent_data));
+    test_mocks::GpioMock mock_gpio;
+    test_mocks::TransportMock mock_transport(sent_data, sizeof(sent_data));
 
     const uint8_t expected_transport[] = {
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -506,13 +506,13 @@ TEST(Nrf24l01, InvalidSizeOfR4AddressTest_TryToSetLessThan1Bytes) {
                 << " at position: " << i << std::endl;
 }
 
-TEST(Nrf24l01, InvalidSizeOfR4AddressTest_TryToSetGreaterThan1Bytes) {
+TEST(Nrf24l01_SetAddress, InvalidSizeOfR4AddressTest_TryToSetGreaterThan1Bytes) {
 
     uint8_t sent_data[200];
 
     Status status;
-    GpioMock mock_gpio;
-    TransportMock mock_transport(sent_data, sizeof(sent_data));
+    test_mocks::GpioMock mock_gpio;
+    test_mocks::TransportMock mock_transport(sent_data, sizeof(sent_data));
 
     const uint8_t expected_transport[] = {
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -557,13 +557,13 @@ TEST(Nrf24l01, InvalidSizeOfR4AddressTest_TryToSetGreaterThan1Bytes) {
 }
 
 
-TEST(Nrf24l01, InvalidSizeOfR5AddressTest_TryToSetLessThan1Bytes) {
+TEST(Nrf24l01_SetAddress, InvalidSizeOfR5AddressTest_TryToSetLessThan1Bytes) {
 
     uint8_t sent_data[200];
 
     Status status;
-    GpioMock mock_gpio;
-    TransportMock mock_transport(sent_data, sizeof(sent_data));
+    test_mocks::GpioMock mock_gpio;
+    test_mocks::TransportMock mock_transport(sent_data, sizeof(sent_data));
 
     const uint8_t expected_transport[] = {
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -589,13 +589,13 @@ TEST(Nrf24l01, InvalidSizeOfR5AddressTest_TryToSetLessThan1Bytes) {
                 << " at position: " << i << std::endl;
 }
 
-TEST(Nrf24l01, InvalidSizeOfR5AddressTest_TryToSetGreaterThan1Bytes) {
+TEST(Nrf24l01_SetAddress, InvalidSizeOfR5AddressTest_TryToSetGreaterThan1Bytes) {
 
     uint8_t sent_data[200];
 
     Status status;
-    GpioMock mock_gpio;
-    TransportMock mock_transport(sent_data, sizeof(sent_data));
+    test_mocks::GpioMock mock_gpio;
+    test_mocks::TransportMock mock_transport(sent_data, sizeof(sent_data));
 
     const uint8_t expected_transport[] = {
         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -640,13 +640,13 @@ TEST(Nrf24l01, InvalidSizeOfR5AddressTest_TryToSetGreaterThan1Bytes) {
 }
 
 
-TEST(Nrf24l01, SetMultipleTxAddressTests) {
+TEST(Nrf24l01_SetAddress, SetMultipleTxAddressTests) {
 
     uint8_t sent_data[200];
 
     Status status;
-    GpioMock mock_gpio;
-    TransportMock mock_transport(sent_data, sizeof(sent_data));
+    test_mocks::GpioMock mock_gpio;
+    test_mocks::TransportMock mock_transport(sent_data, sizeof(sent_data));
 
     const uint8_t expected_transport[] = {
         0x30, 0x30, 0x45, 0x99, 0xF2, 0xEE, // address for pipe T0
@@ -672,13 +672,13 @@ TEST(Nrf24l01, SetMultipleTxAddressTests) {
                 << " at position: " << i << std::endl;
 }
 
-TEST(Nrf24l01, SetMultipleRxAddressTests) {
+TEST(Nrf24l01_SetAddress, SetMultipleRxAddressTests) {
 
     uint8_t sent_data[200];
 
     Status status;
-    GpioMock mock_gpio;
-    TransportMock mock_transport(sent_data, sizeof(sent_data));
+    test_mocks::GpioMock mock_gpio;
+    test_mocks::TransportMock mock_transport(sent_data, sizeof(sent_data));
 
     const uint8_t expected_transport[] = {
         0x2A, 0xED, 0xF3, 0xA9, 0x8C, 0x44, // address for pipe R0

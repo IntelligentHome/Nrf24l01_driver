@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 #include "Nrf24l01.h"
-#include "Nrf24l01Common.h"
+#include "Mocks.h"
 
 namespace test_nrf24l01 {
 
@@ -9,8 +9,8 @@ TEST(Nrf24l01SetRetries, TryToSetGraterThenMax) {
     uint8_t sent_data[200];
     Status status;
 
-    GpioMock mock_gpio;
-    TransportMock mock_transport(sent_data, sizeof(sent_data));
+    test_mocks::GpioMock mock_gpio;
+    test_mocks::TransportMock mock_transport(sent_data, sizeof(sent_data));
 
     nrf24l01_driver::Nrf24l01 nrf(
             &mock_transport,
@@ -34,8 +34,8 @@ TEST(Nrf24l01SetRetries, SetRetriesAndDelay) {
     uint8_t sent_data[200];
     Status status;
 
-    GpioMock mock_gpio;
-    TransportMock mock_transport(sent_data, sizeof(sent_data));
+    test_mocks::GpioMock mock_gpio;
+    test_mocks::TransportMock mock_transport(sent_data, sizeof(sent_data));
 
     const uint8_t expected_transport[] = {
         0x24, 0x00,

@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 #include "Nrf24l01.h"
-#include "Nrf24l01Common.h"
+#include "Mocks.h"
 
 namespace test_nrf24l01 {
 
@@ -14,8 +14,8 @@ TEST(Nrf24l01, GetStatusRegister) {
     const uint8_t expected_transport[] = {
         0xFF, 0x00, 0x00, 0x00 };
 
-    GpioMock mock_gpio;
-    TransportMock mock_transport(sent_data, sizeof(sent_data), get_data, sizeof(get_data));
+    test_mocks::GpioMock mock_gpio;
+    test_mocks::TransportMock mock_transport(sent_data, sizeof(sent_data), get_data, sizeof(get_data));
 
     nrf24l01_driver::Nrf24l01 nrf(
             &mock_transport,

@@ -13,6 +13,7 @@ include_directories(
     ${PROJECT_SOURCE_DIR}/${GOOGLETEST_ROOT}/include
     ../
     ../../External/include
+    ../../External/testing
     )
 
 set(GOOGLETEST_SOURCES

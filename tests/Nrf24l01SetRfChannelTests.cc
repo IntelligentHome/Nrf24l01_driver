@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 #include "Nrf24l01.h"
-#include "Nrf24l01Common.h"
+#include "Mocks.h"
 
 namespace test_nrf24l01 {
 
@@ -8,8 +8,8 @@ TEST(Nrf24l01SetRfChannelTests, SetRfChannelTo0x60) {
 
     uint8_t sent_data[200];
 
-    GpioMock mock_gpio;
-    TransportMock mock_transport(sent_data, sizeof(sent_data));
+    test_mocks::GpioMock mock_gpio;
+    test_mocks::TransportMock mock_transport(sent_data, sizeof(sent_data));
 
     const uint8_t expected_transport[] = { 0x25, 0x60, 0x00, 0x00 };
 
@@ -31,8 +31,8 @@ TEST(Nrf24l01SetRfChannelTests, SetRfChannelCoupleTimes) {
 
     uint8_t sent_data[200];
 
-    GpioMock mock_gpio;
-    TransportMock mock_transport(sent_data, sizeof(sent_data));
+    test_mocks::GpioMock mock_gpio;
+    test_mocks::TransportMock mock_transport(sent_data, sizeof(sent_data));
 
     const uint8_t expected_transport[] = { 0x25, 0x46, 0x25, 0x33, 0x00, 0x00 };
 
@@ -55,8 +55,8 @@ TEST(Nrf24l01SetRfChannelTests, NegativeTryToSetMoreThanMax) {
 
     uint8_t sent_data[200];
 
-    GpioMock mock_gpio;
-    TransportMock mock_transport(sent_data, sizeof(sent_data));
+    test_mocks::GpioMock mock_gpio;
+    test_mocks::TransportMock mock_transport(sent_data, sizeof(sent_data));
 
     const uint8_t expected_transport[] = { 0x00, 0x00 };
 

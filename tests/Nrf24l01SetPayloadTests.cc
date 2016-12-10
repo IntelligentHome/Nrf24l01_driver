@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 #include "Nrf24l01.h"
-#include "Nrf24l01Common.h"
+#include "Mocks.h"
 
 namespace test_nrf24l01 {
 
@@ -20,8 +20,8 @@ TEST(Nrf24l01_SetPaylaod, SetMaxSizePayload) {
         'g', 'e', '1', '2', '3', '4', '5', '6',
     };
 
-    GpioMock mock_gpio;
-    TransportMock mock_transport(sent_data, sizeof(sent_data));
+    test_mocks::GpioMock mock_gpio;
+    test_mocks::TransportMock mock_transport(sent_data, sizeof(sent_data));
 
     nrf24l01_driver::Nrf24l01 nrf(
             &mock_transport,
@@ -50,8 +50,8 @@ TEST(Nrf24l01_SetPaylaod, SetMoreThanMaxSizeOfPayload) {
         0xFF,
     };
 
-    GpioMock mock_gpio;
-    TransportMock mock_transport(sent_data, sizeof(sent_data));
+    test_mocks::GpioMock mock_gpio;
+    test_mocks::TransportMock mock_transport(sent_data, sizeof(sent_data));
 
     nrf24l01_driver::Nrf24l01 nrf(
             &mock_transport,

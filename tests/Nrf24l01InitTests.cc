@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 #include "Nrf24l01.h"
-#include "Nrf24l01Common.h"
+#include "Mocks.h"
 
 
 namespace test_nrf24l01 {
@@ -18,8 +18,8 @@ TEST(Nrf24l01, Init) {
 
     uint8_t sent_data[200];
 
-    GpioMock gpio(&set_cnt, &clear_cnt, &toggle_cnt, &state);
-    TransportMock transport(sent_data, sizeof(sent_data));
+    test_mocks::GpioMock gpio(&set_cnt, &clear_cnt, &toggle_cnt, &state);
+    test_mocks::TransportMock transport(sent_data, sizeof(sent_data));
 
     const uint8_t expected_transport[] = {
         0x25, 0x60, // Set Channel
