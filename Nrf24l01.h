@@ -74,6 +74,7 @@ public:
     virtual Status StopListening(void);
     virtual Status FlushRx(void);
     virtual Status FlushTx(void);
+    virtual Status ClearIrqFlags(void);
 
     virtual Status SendData(void);
 
