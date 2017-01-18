@@ -50,8 +50,15 @@ Nrf24l01::Nrf24l01(
 
 Status Nrf24l01::SetDefaults(void) {
 
+    const uint8_t address[] = {
+        0xC2, 0xC2, 0xC2, 0xC2, 0xC2,
+    };
     this->SetRfChannel(0x60);
     this->SetDefaultConfig();
+    this->SetAutoAck(0x3F);
+    this->SetPayloadSize(0x20);
+    this->SetRetries(15, 15);
+    this->SetAddress(nrf24_driver::R0, address, sizeof(address));
 
     return STATUS_FAILURE;
 }
