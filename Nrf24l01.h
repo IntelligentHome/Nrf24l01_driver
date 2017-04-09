@@ -3,6 +3,7 @@
 #include "INrf24.h"
 #include "IGpioDriver.h"
 #include "ITransport.h"
+#include "IWait.h"
 
 namespace nrf24l01_driver {
 
@@ -81,9 +82,14 @@ public:
     virtual nrf24_driver::NrfStatusRegister GetStatus(void);
     virtual Status GetPayload(uint8_t payload[], const uint8_t size);
 
+    void Send(uint8_t data[], uint8_t size);
+
+    void AddWaiter(iwait::IWait *wait_);
+
 private:
     transport::ITransport *transport_;
     gpio_driver::IGpio *chip_enable_;
+    iwait::IWait *wait_;
 
     Status SetDefaultConfig(void);
 

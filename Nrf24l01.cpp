@@ -48,17 +48,31 @@ Nrf24l01::Nrf24l01(
     this->SetDefaults();
 }
 
+void Nrf24l01::AddWaiter(iwait::IWait *wait_) {
+    this->wait_ = wait_;
+}
+
 Status Nrf24l01::SetDefaults(void) {
 
-    const uint8_t address[] = {
-        0xC2, 0xC2, 0xC2, 0xC2, 0xC2,
-    };
     this->SetRfChannel(0x60);
     this->SetDefaultConfig();
     this->SetAutoAck(0x3F);
     this->SetPayloadSize(0x20);
     this->SetRetries(15, 15);
-    this->SetAddress(nrf24_driver::R0, address, sizeof(address));
+
+    {
+        const uint8_t address[] = {
+            0xC2, 0xC2, 0xC2, 0xC2, 0xC2,
+        };
+        this->SetAddress(nrf24_driver::R0, address, sizeof(address));
+    }
+
+    {
+        const uint8_t address[] = {
+            0xE7, 0xE7, 0xE7, 0xE7, 0xE7,
+        };
+        this->SetAddress(nrf24_driver::T0, address, sizeof(address));
+    }
 
     return STATUS_FAILURE;
 }
@@ -386,6 +400,9 @@ Status Nrf24l01::SendData(void) {
     this->transport_->Send(config_data.raw_data, sizeof(config_data.raw_data));
 
     this->chip_enable_->Set();   // TODO: This should be changed to
+
+    this->wait_->wait_us(20);
+
     this->chip_enable_->Clear(); // SetFor(10us) function.
 
     return STATUS_OK;
@@ -438,6 +455,11 @@ Status Nrf24l01::FlushTx(void) {
     this->transport_->Send(flush_tx.raw_data, sizeof(flush_tx.raw_data));
 
     return STATUS_OK;
+}
+
+void Nrf24l01::Send(uint8_t data[], uint8_t size) {
+
+    this->transport_->Send(data, size);
 }
 
 Status Nrf24l01::ClearIrqFlags(void) {
